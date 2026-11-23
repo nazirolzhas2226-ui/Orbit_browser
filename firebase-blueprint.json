@@ -1,0 +1,162 @@
+{
+  "entities": {
+    "NAccountProfile": {
+      "title": "NAccount Profile",
+      "description": "User identity and cloud sync preferences for Orbit Browser NAccount.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Firebase Auth UID of the owner." },
+        "naccountHandle": { "type": "string", "description": "Orbit NAccount handle (e.g. @orbit_user)." },
+        "displayName": { "type": "string", "description": "Display name." },
+        "email": { "type": "string", "description": "Optional verified email." },
+        "linkedProviders": { "type": "array", "description": "Connected identity providers (GOOGLE, VK, PROTONMAIL, TELEGRAM)." },
+        "vkHandle": { "type": "string", "description": "Optional linked VK handle." },
+        "protonHandle": { "type": "string", "description": "Optional linked ProtonMail address." },
+        "telegramHandle": { "type": "string", "description": "Optional linked Telegram handle." },
+        "cloudSyncEnabled": { "type": "boolean", "description": "Master cloud sync switch." },
+        "syncBookmarks": { "type": "boolean", "description": "Sync favorites/bookmarks." },
+        "syncSettings": { "type": "boolean", "description": "Sync browser settings and themes." },
+        "syncHistory": { "type": "boolean", "description": "Sync browsing history." },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Server timestamp on creation." },
+        "updatedAt": { "type": "string", "format": "date-time", "description": "Server timestamp on update." }
+      },
+      "required": ["userId", "naccountHandle", "displayName", "linkedProviders", "cloudSyncEnabled", "syncBookmarks", "syncSettings", "syncHistory", "createdAt", "updatedAt"]
+    },
+    "OrbitSettings": {
+      "title": "Orbit Browser Settings",
+      "description": "Cloud-synced appearance, security, gaming, performance, RedAI, and language settings.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "styleMode": { "type": "string", "enum": ["LIQUID_GLASS", "M3_EXPRESSIVE", "GAMING_GX", "MINIMALIST", "NOTHING_OS", "KOSMOS", "MINECRAFT", "SAKURA"] },
+        "themeBrightness": { "type": "string", "enum": ["SYSTEM", "DARK", "LIGHT"] },
+        "colorPalette": { "type": "string", "enum": ["ORBIT_CYAN", "EMERALD_MINT", "FROST_PRISM", "NEPTUNE_DEEP", "MARS_CRIMSON", "JUPITER_STORM", "SATURN_GOLD", "SUPERNOVA_VIOLET", "ANDROMEDA_NEBULA", "MOON_FROST", "NEON_CRIMSON", "EXPRESSIVE_VIOLET", "AMBER_SOLAR", "SAKURA_ROSE", "ARCTIC_FROST", "CYBER_LIME", "OBSIDIAN_GOLD", "MERCURY_QUICKSILVER", "JUPITER_CYBER"] },
+        "wallpaperStyle": { "type": "string", "enum": ["NONE", "MINT_MEADOW", "PRISM_FROST", "KOSMOS_NEBULA", "PLANET_EARTH", "DEEP_PULSAR", "LIQUID_AURORA", "CYBER_GRID", "OCEAN_MIST", "OBSIDIAN_MESH", "SUNSET_GLASS", "AURORA_BOREALIS", "SAKURA_SILK", "SOLAR_ECLIPSE", "CYBERPUNK_TOKYO", "MERCURY_LIQUID", "JUPITER_VORTEX"] },
+        "homeLayout": { "type": "string", "enum": ["CLASSIC", "COMPACT", "DASHBOARD", "MINIMAL"] },
+        "dockStyle": { "type": "string" },
+        "monarchG2EngineEnabled": { "type": "boolean" },
+        "iconTheme": { "type": "string" },
+        "glassTransparency": { "type": "string" },
+        "animationStyle": { "type": "string" },
+        "cornerStyle": { "type": "string" },
+        "starfieldParticlesEnabled": { "type": "boolean" },
+        "expressiveShapeStyle": { "type": "string" },
+        "homeLogoScale": { "type": "string" },
+        "themedIconsAdaptApp": { "type": "boolean" },
+        "compactStatusPills": { "type": "boolean" },
+        "showFavorites": { "type": "boolean" },
+        "showPrivacyReport": { "type": "boolean" },
+        "showRedAiBar": { "type": "boolean" },
+        "showCosmosWidget": { "type": "boolean" },
+        "showQuickNotesWidget": { "type": "boolean" },
+        "quickNotesText": { "type": "string" },
+        "showGamingTelemetry": { "type": "boolean" },
+        "adBlockEnabled": { "type": "boolean" },
+        "antiTrackingEnabled": { "type": "boolean" },
+        "httpsOnlyEnabled": { "type": "boolean" },
+        "webRtcLeakProtection": { "type": "boolean" },
+        "canvasFingerprintProtection": { "type": "boolean" },
+        "doNotTrackEnabled": { "type": "boolean" },
+        "cookieAutoPurgeEnabled": { "type": "boolean" },
+        "vpnEnabled": { "type": "boolean" },
+        "vpnRegion": { "type": "string", "enum": ["AMSTERDAM", "FRANKFURT", "TOKYO", "ZURICH", "SINGAPORE", "NEW_YORK"] },
+        "antivirusProvider": { "type": "string", "enum": ["NONE", "KASPERSKY", "DR_WEB", "BOTH"] },
+        "gamingRgbEnabled": { "type": "boolean" },
+        "gamingHapticsEnabled": { "type": "boolean" },
+        "performanceModeEnabled": { "type": "boolean" },
+        "ramLimitMb": { "type": "integer" },
+        "tabHibernationEnabled": { "type": "boolean" },
+        "searchEngine": { "type": "string", "enum": ["GOOGLE", "DUCKDUCKGO", "BING", "YANDEX", "STARTPAGE"] },
+        "appLanguage": { "type": "string", "enum": ["RU", "EN", "KK", "ES", "DE", "FR"] },
+        "mercuryAiModel": { "type": "string", "enum": ["gemini-3.8-flash", "gemini-3.5-flash-lite", "gemini-4-argon"] },
+        "redAiAutoSummarize": { "type": "boolean" },
+        "redAiSafeLinkScan": { "type": "boolean" },
+        "redAiStyle": { "type": "string", "enum": ["CONCISE", "DETAILED", "TECHNICAL"] },
+        "notifyBlockedTrackers": { "type": "boolean" },
+        "notifyCloudSync": { "type": "boolean" },
+        "notifySecurityAlerts": { "type": "boolean" },
+        "soundEffectsEnabled": { "type": "boolean" },
+        "customAccentHex": { "type": "integer" },
+        "customSecondaryHex": { "type": "integer" },
+        "customCornerRadiusDp": { "type": "integer" },
+        "borderGlowIntensity": { "type": "integer" },
+        "glassBlurLevel": { "type": "integer" },
+        "customIconUri": { "type": "string" },
+        "dnsOverHttpsEnabled": { "type": "boolean" },
+        "blockPopupsEnabled": { "type": "boolean" },
+        "antiPhishingShieldEnabled": { "type": "boolean" },
+        "floatingSpeedHudEnabled": { "type": "boolean" },
+        "adsBlockedTotal": { "type": "integer" },
+        "trackersBlockedTotal": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "styleMode", "themeBrightness", "colorPalette", "wallpaperStyle", "homeLayout", "showFavorites", "showPrivacyReport", "showRedAiBar", "showGamingTelemetry", "adBlockEnabled", "antiTrackingEnabled", "httpsOnlyEnabled", "vpnEnabled", "vpnRegion", "antivirusProvider", "gamingRgbEnabled", "gamingHapticsEnabled", "performanceModeEnabled", "ramLimitMb", "tabHibernationEnabled", "searchEngine", "appLanguage", "redAiAutoSummarize", "redAiSafeLinkScan", "redAiStyle", "notifyBlockedTrackers", "notifyCloudSync", "notifySecurityAlerts", "adsBlockedTotal", "trackersBlockedTotal", "createdAt", "updatedAt"]
+    },
+    "FavoriteSite": {
+      "title": "Favorite Site",
+      "description": "Pinned bookmark tile on Orbit Browser home tab.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "url": { "type": "string" },
+        "iconBadge": { "type": "string" },
+        "accentHex": { "type": "integer" },
+        "sortOrder": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "url", "iconBadge", "accentHex", "sortOrder", "createdAt", "updatedAt"]
+    },
+    "HistoryEntry": {
+      "title": "Browsing History Entry",
+      "description": "Visited webpage record synced across devices.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "url": { "type": "string" },
+        "visitedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "url", "visitedAt"]
+    },
+    "SyncedTab": {
+      "title": "Synced Browser Tab",
+      "description": "Open browser tab persisted in cloud for multi-device continuity.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "title": { "type": "string" },
+        "url": { "type": "string" },
+        "incognito": { "type": "boolean" },
+        "sortOrder": { "type": "integer" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "title", "url", "incognito", "sortOrder", "createdAt", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/NAccountProfile" },
+      "description": "NAccount profile and sync preferences isolated to the authenticated owner."
+    },
+    "/users/{userId}/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/OrbitSettings" },
+      "description": "Cloud-synced browser customization, security, gaming, and AI settings."
+    },
+    "/users/{userId}/favorites/{favoriteId}": {
+      "schema": { "$ref": "#/entities/FavoriteSite" },
+      "description": "User's favorite site shortcuts displayed on the start screen."
+    },
+    "/users/{userId}/history/{entryId}": {
+      "schema": { "$ref": "#/entities/HistoryEntry" },
+      "description": "User's cloud-synced browsing history."
+    },
+    "/users/{userId}/tabs/{tabId}": {
+      "schema": { "$ref": "#/entities/SyncedTab" },
+      "description": "User's synced open browser tabs."
+    }
+  }
+}

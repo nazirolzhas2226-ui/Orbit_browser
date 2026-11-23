@@ -1,0 +1,321 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global safety net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidNAccountProfile(data, userId) {
+      return data.userId is string && data.userId == userId &&
+             data.naccountHandle is string && data.naccountHandle.size() >= 3 && data.naccountHandle.size() <= 32 &&
+             data.displayName is string && data.displayName.size() >= 1 && data.displayName.size() <= 60 &&
+             (!('email' in data) || (data.email is string && data.email.size() <= 120)) &&
+             data.linkedProviders is list && data.linkedProviders.size() <= 8 &&
+             (data.linkedProviders.size() == 0 || data.linkedProviders[0] is string) &&
+             (!('vkHandle' in data) || (data.vkHandle is string && data.vkHandle.size() <= 64)) &&
+             (!('protonHandle' in data) || (data.protonHandle is string && data.protonHandle.size() <= 120)) &&
+             (!('telegramHandle' in data) || (data.telegramHandle is string && data.telegramHandle.size() <= 64)) &&
+             data.cloudSyncEnabled is bool &&
+             data.syncBookmarks is bool &&
+             data.syncSettings is bool &&
+             data.syncHistory is bool &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidOrbitSettings(data, userId) {
+      return data.userId is string && data.userId == userId &&
+             data.styleMode in ['LIQUID_GLASS', 'M3_EXPRESSIVE', 'GAMING_GX', 'MINIMALIST', 'NOTHING_OS', 'KOSMOS', 'MINECRAFT', 'SAKURA'] &&
+             data.themeBrightness in ['SYSTEM', 'DARK', 'LIGHT'] &&
+             data.colorPalette in [
+               'ORBIT_CYAN', 'EMERALD_MINT', 'FROST_PRISM', 'NEPTUNE_DEEP', 'MARS_CRIMSON',
+               'JUPITER_STORM', 'SATURN_GOLD', 'SUPERNOVA_VIOLET', 'ANDROMEDA_NEBULA', 'MOON_FROST',
+               'NEON_CRIMSON', 'EXPRESSIVE_VIOLET', 'AMBER_SOLAR', 'SAKURA_ROSE', 'ARCTIC_FROST',
+               'CYBER_LIME', 'OBSIDIAN_GOLD', 'EMERALD_PULSE', 'MONO_FROST', 'MERCURY_QUICKSILVER', 'JUPITER_CYBER'
+             ] &&
+             data.wallpaperStyle in [
+               'NONE', 'MINT_MEADOW', 'PRISM_FROST', 'KOSMOS_NEBULA', 'PLANET_EARTH', 'DEEP_PULSAR',
+               'LIQUID_AURORA', 'CYBER_GRID', 'OCEAN_MIST', 'OBSIDIAN_MESH', 'SUNSET_GLASS',
+               'AURORA_BOREALIS', 'SAKURA_SILK', 'SOLAR_ECLIPSE', 'CYBERPUNK_TOKYO', 'MERCURY_LIQUID', 'JUPITER_VORTEX'
+             ] &&
+             data.homeLayout in ['CLASSIC', 'COMPACT', 'DASHBOARD', 'MINIMAL'] &&
+             (!('dockStyle' in data) || data.dockStyle in ['SAFARI_CAPSULE', 'MEGA_DOCK', 'MINIMAL_PILL', 'KOSMOS_ORBITAL']) &&
+             (!('monarchG2EngineEnabled' in data) || data.monarchG2EngineEnabled is bool) &&
+             (!('iconTheme' in data) || data.iconTheme in [
+               'AUTO_THEME', 'ORBIT_CYAN', 'GX_CRIMSON', 'PURE_WHITE', 'RAINBOW_COMPASS',
+               'GOLD_SATURN', 'EMERALD_PULSE', 'VIOLET_NEBULA', 'MARS_CORE', 'NEPTUNE_PRISM',
+               'BLACK_HOLE', 'AMBER_SOLAR', 'SAKURA_BLOSSOM', 'ARCTIC_CRYSTAL', 'CYBER_MINT', 'CHERRY_NEON',
+               'JUPITER_GX', 'MERCURY_CORE'
+             ]) &&
+             (!('glassTransparency' in data) || data.glassTransparency in ['CRYSTAL', 'FROSTED', 'SILK']) &&
+             (!('animationStyle' in data) || data.animationStyle in ['FLUID_SPRING', 'TURBO_SNAPPY', 'CINEMATIC']) &&
+             (!('cornerStyle' in data) || data.cornerStyle in ['COMPACT', 'ROUNDED', 'CAPSULE']) &&
+             (!('starfieldParticlesEnabled' in data) || data.starfieldParticlesEnabled is bool) &&
+             (!('expressiveShapeStyle' in data) || data.expressiveShapeStyle in ['AUTO_MIX', 'FLOWER', 'CLOVER', 'STARBURST', 'HEXAGON', 'SQUIRCLE']) &&
+             (!('homeLogoScale' in data) || data.homeLogoScale in ['COMPACT', 'MEDIUM', 'LARGE']) &&
+             (!('themedIconsAdaptApp' in data) || data.themedIconsAdaptApp is bool) &&
+             (!('compactStatusPills' in data) || data.compactStatusPills is bool) &&
+             data.showFavorites is bool &&
+             data.showPrivacyReport is bool &&
+             data.showRedAiBar is bool &&
+             (!('showCosmosWidget' in data) || data.showCosmosWidget is bool) &&
+             (!('showQuickNotesWidget' in data) || data.showQuickNotesWidget is bool) &&
+             (!('quickNotesText' in data) || (data.quickNotesText is string && data.quickNotesText.size() <= 4000)) &&
+             data.showGamingTelemetry is bool &&
+             data.adBlockEnabled is bool &&
+             data.antiTrackingEnabled is bool &&
+             data.httpsOnlyEnabled is bool &&
+             (!('webRtcLeakProtection' in data) || data.webRtcLeakProtection is bool) &&
+             (!('canvasFingerprintProtection' in data) || data.canvasFingerprintProtection is bool) &&
+             (!('doNotTrackEnabled' in data) || data.doNotTrackEnabled is bool) &&
+             (!('cookieAutoPurgeEnabled' in data) || data.cookieAutoPurgeEnabled is bool) &&
+             data.vpnEnabled is bool &&
+             data.vpnRegion in ['AMSTERDAM', 'FRANKFURT', 'TOKYO', 'ZURICH', 'SINGAPORE', 'NEW_YORK'] &&
+             data.antivirusProvider in ['NONE', 'KASPERSKY', 'DR_WEB', 'BOTH'] &&
+             data.gamingRgbEnabled is bool &&
+             data.gamingHapticsEnabled is bool &&
+             data.performanceModeEnabled is bool &&
+             data.ramLimitMb is int && data.ramLimitMb >= 512 && data.ramLimitMb <= 8192 &&
+             data.tabHibernationEnabled is bool &&
+             data.searchEngine in ['GOOGLE', 'DUCKDUCKGO', 'BING', 'YANDEX', 'STARTPAGE'] &&
+             data.appLanguage in ['RU', 'EN', 'KK', 'ES', 'DE', 'FR'] &&
+             (!('mercuryAiModel' in data) || data.mercuryAiModel in ['gemini-3.8-flash', 'gemini-3.5-flash-lite', 'gemini-4-argon']) &&
+             data.redAiAutoSummarize is bool &&
+             data.redAiSafeLinkScan is bool &&
+             data.redAiStyle in ['CONCISE', 'DETAILED', 'TECHNICAL'] &&
+             data.notifyBlockedTrackers is bool &&
+             data.notifyCloudSync is bool &&
+             data.notifySecurityAlerts is bool &&
+             (!('soundEffectsEnabled' in data) || data.soundEffectsEnabled is bool) &&
+             (!('customAccentHex' in data) || data.customAccentHex is int) &&
+             (!('customSecondaryHex' in data) || data.customSecondaryHex is int) &&
+             (!('customCornerRadiusDp' in data) || (data.customCornerRadiusDp is int && data.customCornerRadiusDp >= 0 && data.customCornerRadiusDp <= 36)) &&
+             (!('borderGlowIntensity' in data) || (data.borderGlowIntensity is int && data.borderGlowIntensity >= 0 && data.borderGlowIntensity <= 100)) &&
+             (!('glassBlurLevel' in data) || (data.glassBlurLevel is int && data.glassBlurLevel >= 0 && data.glassBlurLevel <= 100)) &&
+             (!('customIconUri' in data) || (data.customIconUri is string && data.customIconUri.size() <= 1000)) &&
+             (!('dnsOverHttpsEnabled' in data) || data.dnsOverHttpsEnabled is bool) &&
+             (!('blockPopupsEnabled' in data) || data.blockPopupsEnabled is bool) &&
+             (!('antiPhishingShieldEnabled' in data) || data.antiPhishingShieldEnabled is bool) &&
+             (!('floatingSpeedHudEnabled' in data) || data.floatingSpeedHudEnabled is bool) &&
+             data.adsBlockedTotal is int && data.adsBlockedTotal >= 0 &&
+             data.trackersBlockedTotal is int && data.trackersBlockedTotal >= 0 &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidFavoriteSite(data, userId) {
+      return data.userId is string && data.userId == userId &&
+             data.title is string && data.title.size() >= 1 && data.title.size() <= 50 &&
+             data.url is string && data.url.size() >= 1 && data.url.size() <= 500 &&
+             data.iconBadge is string && data.iconBadge.size() >= 1 && data.iconBadge.size() <= 16 &&
+             data.accentHex is int &&
+             data.sortOrder is int && data.sortOrder >= 0 && data.sortOrder <= 1000 &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    function isValidHistoryEntry(data, userId) {
+      return data.userId is string && data.userId == userId &&
+             data.title is string && data.title.size() >= 1 && data.title.size() <= 120 &&
+             data.url is string && data.url.size() >= 1 && data.url.size() <= 500 &&
+             data.visitedAt is timestamp && data.visitedAt <= request.time;
+    }
+
+    function isValidSyncedTab(data, userId) {
+      return data.userId is string && data.userId == userId &&
+             data.title is string && data.title.size() >= 1 && data.title.size() <= 120 &&
+             data.url is string && data.url.size() <= 500 &&
+             data.incognito is bool &&
+             data.sortOrder is int && data.sortOrder >= 0 && data.sortOrder <= 500 &&
+             data.createdAt is timestamp && data.createdAt <= request.time &&
+             data.updatedAt is timestamp && data.updatedAt <= request.time;
+    }
+
+    match /users/{userId} {
+      allow get: if isOwner(userId) && isValidId(userId);
+      allow list: if false;
+
+      allow create: if isOwner(userId) &&
+                       isValidId(userId) &&
+                       incoming().keys().hasAll([
+                         'userId', 'naccountHandle', 'displayName', 'linkedProviders',
+                         'cloudSyncEnabled', 'syncBookmarks', 'syncSettings', 'syncHistory',
+                         'createdAt', 'updatedAt'
+                       ]) &&
+                       incoming().keys().hasOnly([
+                         'userId', 'naccountHandle', 'displayName', 'email', 'linkedProviders',
+                         'vkHandle', 'protonHandle', 'telegramHandle',
+                         'cloudSyncEnabled', 'syncBookmarks', 'syncSettings', 'syncHistory',
+                         'createdAt', 'updatedAt'
+                       ]) &&
+                       isValidNAccountProfile(incoming(), userId);
+
+      allow update: if isOwner(userId) &&
+                       isValidId(userId) &&
+                       isValidNAccountProfile(incoming(), userId) &&
+                       incoming().userId == existing().userId &&
+                       incoming().createdAt == existing().createdAt &&
+                       incoming().diff(existing()).affectedKeys().hasOnly([
+                         'naccountHandle', 'displayName', 'email', 'linkedProviders',
+                         'vkHandle', 'protonHandle', 'telegramHandle',
+                         'cloudSyncEnabled', 'syncBookmarks', 'syncSettings', 'syncHistory',
+                         'updatedAt'
+                       ]);
+
+      allow delete: if isOwner(userId) && isValidId(userId);
+
+      match /settings/{settingId} {
+        allow get: if isOwner(userId) && isValidId(settingId);
+        allow list: if isOwner(userId);
+
+        allow create: if isOwner(userId) &&
+                         settingId == 'orbit_config' &&
+                         incoming().keys().hasAll([
+                           'userId', 'styleMode', 'themeBrightness', 'colorPalette', 'wallpaperStyle', 'homeLayout',
+                           'showFavorites', 'showPrivacyReport', 'showRedAiBar', 'showGamingTelemetry',
+                           'adBlockEnabled', 'antiTrackingEnabled', 'httpsOnlyEnabled', 'vpnEnabled', 'vpnRegion',
+                           'antivirusProvider', 'gamingRgbEnabled', 'gamingHapticsEnabled', 'performanceModeEnabled',
+                           'ramLimitMb', 'tabHibernationEnabled', 'searchEngine', 'appLanguage',
+                           'redAiAutoSummarize', 'redAiSafeLinkScan', 'redAiStyle',
+                           'notifyBlockedTrackers', 'notifyCloudSync', 'notifySecurityAlerts',
+                           'adsBlockedTotal', 'trackersBlockedTotal', 'createdAt', 'updatedAt'
+                         ]) &&
+                         incoming().keys().hasOnly([
+                           'userId', 'styleMode', 'themeBrightness', 'colorPalette', 'wallpaperStyle', 'homeLayout',
+                           'dockStyle', 'monarchG2EngineEnabled', 'iconTheme', 'glassTransparency', 'animationStyle',
+                           'cornerStyle', 'starfieldParticlesEnabled', 'expressiveShapeStyle', 'homeLogoScale',
+                           'themedIconsAdaptApp', 'compactStatusPills',
+                           'showFavorites', 'showPrivacyReport', 'showRedAiBar', 'showCosmosWidget',
+                           'showQuickNotesWidget', 'quickNotesText', 'showGamingTelemetry',
+                           'adBlockEnabled', 'antiTrackingEnabled', 'httpsOnlyEnabled',
+                           'webRtcLeakProtection', 'canvasFingerprintProtection', 'doNotTrackEnabled', 'cookieAutoPurgeEnabled',
+                           'vpnEnabled', 'vpnRegion', 'antivirusProvider',
+                           'gamingRgbEnabled', 'gamingHapticsEnabled', 'performanceModeEnabled',
+                           'ramLimitMb', 'tabHibernationEnabled', 'searchEngine', 'appLanguage', 'mercuryAiModel',
+                           'redAiAutoSummarize', 'redAiSafeLinkScan', 'redAiStyle',
+                           'notifyBlockedTrackers', 'notifyCloudSync', 'notifySecurityAlerts',
+                           'soundEffectsEnabled', 'customAccentHex', 'customSecondaryHex',
+                           'customCornerRadiusDp', 'borderGlowIntensity', 'glassBlurLevel', 'customIconUri',
+                           'dnsOverHttpsEnabled', 'blockPopupsEnabled', 'antiPhishingShieldEnabled', 'floatingSpeedHudEnabled',
+                           'adsBlockedTotal', 'trackersBlockedTotal', 'createdAt', 'updatedAt'
+                         ]) &&
+                         isValidOrbitSettings(incoming(), userId);
+
+        allow update: if isOwner(userId) &&
+                         settingId == 'orbit_config' &&
+                         isValidOrbitSettings(incoming(), userId) &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         incoming().diff(existing()).affectedKeys().hasOnly([
+                           'styleMode', 'themeBrightness', 'colorPalette', 'wallpaperStyle', 'homeLayout',
+                           'dockStyle', 'monarchG2EngineEnabled', 'iconTheme', 'glassTransparency', 'animationStyle',
+                           'cornerStyle', 'starfieldParticlesEnabled', 'expressiveShapeStyle', 'homeLogoScale',
+                           'themedIconsAdaptApp', 'compactStatusPills',
+                           'showFavorites', 'showPrivacyReport', 'showRedAiBar', 'showCosmosWidget',
+                           'showQuickNotesWidget', 'quickNotesText', 'showGamingTelemetry',
+                           'adBlockEnabled', 'antiTrackingEnabled', 'httpsOnlyEnabled',
+                           'webRtcLeakProtection', 'canvasFingerprintProtection', 'doNotTrackEnabled', 'cookieAutoPurgeEnabled',
+                           'vpnEnabled', 'vpnRegion', 'antivirusProvider',
+                           'gamingRgbEnabled', 'gamingHapticsEnabled', 'performanceModeEnabled',
+                           'ramLimitMb', 'tabHibernationEnabled', 'searchEngine', 'appLanguage', 'mercuryAiModel',
+                           'redAiAutoSummarize', 'redAiSafeLinkScan', 'redAiStyle',
+                           'notifyBlockedTrackers', 'notifyCloudSync', 'notifySecurityAlerts',
+                           'soundEffectsEnabled', 'customAccentHex', 'customSecondaryHex',
+                           'customCornerRadiusDp', 'borderGlowIntensity', 'glassBlurLevel', 'customIconUri',
+                           'dnsOverHttpsEnabled', 'blockPopupsEnabled', 'antiPhishingShieldEnabled', 'floatingSpeedHudEnabled',
+                           'adsBlockedTotal', 'trackersBlockedTotal', 'updatedAt'
+                         ]);
+
+        allow delete: if isOwner(userId) && isValidId(settingId);
+      }
+
+      match /favorites/{favoriteId} {
+        allow get: if isOwner(userId) && isValidId(favoriteId);
+        allow list: if isOwner(userId);
+
+        allow create: if isOwner(userId) &&
+                         isValidId(favoriteId) &&
+                         incoming().keys().hasAll([
+                           'userId', 'title', 'url', 'iconBadge', 'accentHex', 'sortOrder', 'createdAt', 'updatedAt'
+                         ]) &&
+                         incoming().keys().hasOnly([
+                           'userId', 'title', 'url', 'iconBadge', 'accentHex', 'sortOrder', 'createdAt', 'updatedAt'
+                         ]) &&
+                         isValidFavoriteSite(incoming(), userId);
+
+        allow update: if isOwner(userId) &&
+                         isValidId(favoriteId) &&
+                         isValidFavoriteSite(incoming(), userId) &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         incoming().diff(existing()).affectedKeys().hasOnly([
+                           'title', 'url', 'iconBadge', 'accentHex', 'sortOrder', 'updatedAt'
+                         ]);
+
+        allow delete: if isOwner(userId) && isValidId(favoriteId);
+      }
+
+      match /history/{entryId} {
+        allow get: if isOwner(userId) && isValidId(entryId);
+        allow list: if isOwner(userId);
+
+        allow create: if isOwner(userId) &&
+                         isValidId(entryId) &&
+                         incoming().keys().hasAll(['userId', 'title', 'url', 'visitedAt']) &&
+                         incoming().keys().hasOnly(['userId', 'title', 'url', 'visitedAt']) &&
+                         isValidHistoryEntry(incoming(), userId);
+
+        allow update: if false;
+        allow delete: if isOwner(userId) && isValidId(entryId);
+      }
+
+      match /tabs/{tabId} {
+        allow get: if isOwner(userId) && isValidId(tabId);
+        allow list: if isOwner(userId);
+
+        allow create: if isOwner(userId) &&
+                         isValidId(tabId) &&
+                         incoming().keys().hasAll([
+                           'userId', 'title', 'url', 'incognito', 'sortOrder', 'createdAt', 'updatedAt'
+                         ]) &&
+                         incoming().keys().hasOnly([
+                           'userId', 'title', 'url', 'incognito', 'sortOrder', 'createdAt', 'updatedAt'
+                         ]) &&
+                         isValidSyncedTab(incoming(), userId);
+
+        allow update: if isOwner(userId) &&
+                         isValidId(tabId) &&
+                         isValidSyncedTab(incoming(), userId) &&
+                         incoming().userId == existing().userId &&
+                         incoming().createdAt == existing().createdAt &&
+                         incoming().diff(existing()).affectedKeys().hasOnly([
+                           'title', 'url', 'incognito', 'sortOrder', 'updatedAt'
+                         ]);
+
+        allow delete: if isOwner(userId) && isValidId(tabId);
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "name": "Orbit",
+  "description": "Customizable Android browser featuring WebGL2 realistic Liquid Glass optics (MonarchG2), Material 3 Expressive, NothingOS, Kosmos, Minecraft, Sakura, and JupiterGX Mode, MercuryAI assistant, built-in privacy defense, and NAccount cloud registration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

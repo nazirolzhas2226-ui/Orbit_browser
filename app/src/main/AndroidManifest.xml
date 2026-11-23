@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <application
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.MyApplication">
+
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|uiMode"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MyApplication" />
+
+        <!-- Default Adaptive + Material You Themed Launcher Icon -->
+        <activity-alias
+            android:name=".LauncherDefault"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- GX Crimson Launcher Icon -->
+        <activity-alias
+            android:name=".LauncherGxCrimson"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_gx"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_gx"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- NothingOS Glyph Launcher Icon -->
+        <activity-alias
+            android:name=".LauncherNothingOs"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_nothing"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_nothing"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- Sakura Blossom Launcher Icon -->
+        <activity-alias
+            android:name=".LauncherSakura"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_sakura"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_sakura"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- Minecraft Emerald Block Launcher Icon -->
+        <activity-alias
+            android:name=".LauncherMinecraft"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_minecraft"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_minecraft"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <!-- Kosmos Nebula Launcher Icon -->
+        <activity-alias
+            android:name=".LauncherKosmos"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher_kosmos"
+            android:label="@string/app_name"
+            android:roundIcon="@mipmap/ic_launcher_kosmos"
+            android:targetActivity=".MainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+    </application>
+
+</manifest>

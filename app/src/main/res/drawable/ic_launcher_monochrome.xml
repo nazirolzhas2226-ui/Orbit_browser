@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Pure alpha-mask Orbit planet & tilted orbital ring for Android 13+ Themed Icons -->
+    <group
+        android:pivotX="54"
+        android:pivotY="54"
+        android:rotation="-24">
+        <!-- Orbital ring -->
+        <path
+            android:pathData="M21,54 A33,12.5 0 1,0 87,54 A33,12.5 0 1,0 21,54 Z"
+            android:strokeWidth="5.2"
+            android:strokeColor="#FFFFFFFF"
+            android:strokeLineCap="round" />
+    </group>
+    <!-- Central planet sphere with inner crescent cutout feel -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M54,36 A18,18 0 1,0 54,72 A18,18 0 1,0 54,36 Z" />
+    <!-- Subtle accent star at top right inside safe zone -->
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M75,27 L76.8,31.2 L81,33 L76.8,34.8 L75,39 L73.2,34.8 L69,33 L73.2,31.2 Z" />
+</vector>
